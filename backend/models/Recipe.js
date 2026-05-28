@@ -237,7 +237,7 @@ RETURNING *`,
     return result.rows[0];
   }
 
-  //Delete recipe
+  //Delete recipes
   static async delete(id, userId) {
     const result = await db.query(
       `DELETE FROM recipes WHERE id = $1 AND user_id = $2 RETURNING *`,
