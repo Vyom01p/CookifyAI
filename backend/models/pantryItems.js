@@ -21,7 +21,7 @@ class PantryItem {
   }
 
   //Get all pantry items for a user
-  static async findbyUserId(userId, filters = {}) {
+  static async findByUserId(userId, filters = {}) {
     let query = "SELECT * from  pantry_items where user_id = $1";
     const params = [userId];
     let paramCount = 1;
