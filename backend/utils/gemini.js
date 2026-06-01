@@ -159,7 +159,7 @@ Provide 3-5 helpful cooking tips to make this recipe better. Return ONLY a JSON 
 };
 
 export default {
-  generateRecipe,
+  generateRecipes,
   generatePantrySuggestions,
   generateCookingTips,
 };
