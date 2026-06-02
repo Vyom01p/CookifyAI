@@ -79,4 +79,4 @@ class MealPlan {
     return result.rows[0];
   }
 }
-export default MealPan;
+export default MealPlan;

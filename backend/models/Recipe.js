@@ -3,7 +3,7 @@ import db from "../config/db.js";
 class Recipe {
   //Create new recipe with ingredients and nutrition
   static async create(userId, recipeData) {
-    const client = await db.pool.connect();
+    const client = await db.connect();
     try {
       await client.query("BEGIN");
       const {
@@ -67,7 +67,7 @@ RETURNING *`,
       //Insert nutrition
       if (nutrition && Object.keys(nutrition).length > 0) {
         await client.query(
-          `INSERT INTO recipe_nutrition(recipe_id,calories,protein,carbs,fats,fiber) VALUES($1,$2,$3,$4,$5,$6)`,
+          `INSERT INTO recipe_nutrition(recipe_id,calories,protein,carbs,fat,fiber) VALUES($1,$2,$3,$4,$5,$6)`,
           [
             recipe.id,
             nutrition.calories,
@@ -109,7 +109,7 @@ RETURNING *`,
 
     //Get Nutrition
     const nutritionResult = await db.query(
-      `SELECT calories ,protein,carbs,fats,fiber from recipe_nutrition WHERE recipe_id=$1`,
+      `SELECT calories ,protein,carbs,fat,fiber from recipe_nutrition WHERE recipe_id=$1`,
       [id],
     );
     return {
@@ -253,7 +253,7 @@ RETURNING *`,
       `SELECT COUNT(*) as total_recipes, COUNT(DISTINCT cuisine_type) as cuisine_types_count,AVG(cook_time) as avg_cook_time FROM recipes WHERE user_id=$1`,
       [userId],
     );
-    return result.row[0];
+    return result.rows[0];
   }
 }
 
