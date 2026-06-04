@@ -1,11 +1,11 @@
-import PantryItems from "../models/PantryItems.js";
-
+import PantryItem from "../models/PantryItems.js";
+// import PantryItems from "../models/PantryItems.js";
 //Get all pantry items
 
 export const getPantryItems = async (req, res, next) => {
   try {
     const { category, is_running_low, search } = req.query;
-    const items = await PantryItems.findByUserId(req.user.id, {
+    const items = await PantryItem.findByUserId(req.user.id, {
       category,
       is_running_low: is_running_low === "true" ? true : undefined,
       search,

@@ -1,5 +1,5 @@
 import Recipe from "../models/Recipe.js";
-import PantryItems from "../models/PantryItems.js";
+import PantryItem from "../models/PantryItems.js";
 import {
   generateRecipe as generateRecipeAI,
   generatePantrySuggestions as generatePantrySuggestionsAI,
