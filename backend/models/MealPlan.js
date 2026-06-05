@@ -60,6 +60,18 @@ class MealPlan {
 
     return result.rows;
   }
+  // Add this inside the MealPlan class
+  static async getWeeklyMealPlan(userId, startDate, endDate) {
+    const query = `
+      SELECT m.*, r.name as recipe_name 
+      FROM meal_plans m
+      LEFT JOIN recipes r ON m.recipe_id = r.id
+      WHERE m.user_id = $1 AND m.meal_date >= $2 AND m.meal_date <= $3
+      ORDER BY m.meal_date ASC
+    `;
+    const result = await db.query(query, [userId, startDate, endDate]);
+    return result.rows;
+  }
 
   //Delete meal plan entry
   static async delete(id, userId) {

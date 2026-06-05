@@ -7,7 +7,7 @@ import authMiddleware from "../middleware/Auth.js";
 router.use(authMiddleware);
 
 router.get("/weekly", mealPlanController.getWeeklyMealPlan);
-router.get("/upcomig", mealPlanController.getUpcomingMeals);
+router.get("/upcoming", mealPlanController.getUpcomingMeals);
 router.get("/stats", mealPlanController.getMealStats);
 router.post("/", mealPlanController.addToMealPlan);
 router.delete("/:id", mealPlanController.deleteMealPlan);

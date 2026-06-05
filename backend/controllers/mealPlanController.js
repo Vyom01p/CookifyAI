@@ -16,17 +16,25 @@ export const addToMealPlan = async (req, res, next) => {
 };
 
 //Get weekly Plan
+// Get weekly Plan
 export const getWeeklyMealPlan = async (req, res, next) => {
   try {
-    const { start_date, weekStartDate } = req.query;
+    const { start_date, end_date, weekStartDate } = req.query;
     const startDate = start_date || weekStartDate;
-    if (!startDate) {
+
+    if (!startDate || !end_date) {
       return res.status(400).json({
         success: false,
-        message: "Please provide start_date or week_date",
+        message: "Please provide both start_date and end_date",
       });
     }
-    const mealPlans = await MealPlan.getWeeklyMealPlan(req.user.id, startDate);
+
+    const mealPlans = await MealPlan.getWeeklyMealPlan(
+      req.user.id,
+      startDate,
+      end_date,
+    );
+
     res.json({
       success: true,
       data: { mealPlans },

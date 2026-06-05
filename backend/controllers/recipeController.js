@@ -77,10 +77,32 @@ export const getPantrySuggestions = async (req, res, next) => {
 };
 
 //Save recipe
-
 export const saveRecipe = async (req, res, next) => {
   try {
-    const recipe = await Recipe.create(req.user.id, req.body);
+    const recipeData = { ...req.body };
+
+    // Clamp top-level fields just in case
+    if (recipeData.cuisine_type) {
+      recipeData.cuisine_type = recipeData.cuisine_type.substring(0, 50);
+    }
+    if (recipeData.difficulty) {
+      recipeData.difficulty = recipeData.difficulty.substring(0, 50);
+    }
+
+    // Sanitize ingredients
+    if (recipeData.ingredients && Array.isArray(recipeData.ingredients)) {
+      recipeData.ingredients = recipeData.ingredients.map((ing) => ({
+        ...ing,
+        quantity: ing.quantity || 0,
+        // Force the unit to be 50 characters max
+        unit: (ing.unit || "").toString().substring(0, 50),
+        // Force the name to be 100 characters max (assuming your DB allows 100 here)
+        name: (ing.name || "Unknown Ingredient").toString().substring(0, 100),
+      }));
+    }
+
+    const recipe = await Recipe.create(req.user.id, recipeData);
+
     res.status(201).json({
       success: true,
       message: "Recipe saved successfully",
