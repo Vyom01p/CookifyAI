@@ -14,7 +14,6 @@ const DIETARY_OPTIONS = [
   "Keto",
   "Paleo",
 ];
-
 const CUISINES = [
   "Any",
   "Italian",
@@ -33,12 +32,7 @@ const Settings = () => {
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const [profile, setProfile] = useState({
-    name: "",
-    email: "",
-  });
-
+  const [profile, setProfile] = useState({ name: "", email: "" });
   const [preferences, setPreferences] = useState({
     dietary_restrictions: [],
     allergies: [],
@@ -46,7 +40,6 @@ const Settings = () => {
     default_servings: 4,
     measurement_unit: "metric",
   });
-
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -61,12 +54,8 @@ const Settings = () => {
     try {
       const response = await api.get("/users/profile");
       const { user, preferences: userPrefs } = response.data.data;
-
-      setProfile({
-        name: user.name,
-        email: user.email,
-      });
-      if (userPrefs) {
+      setProfile({ name: user.name, email: user.email });
+      if (userPrefs)
         setPreferences({
           dietary_restrictions: userPrefs.dietary_restrictions || [],
           allergies: userPrefs.allergies || [],
@@ -74,7 +63,6 @@ const Settings = () => {
           default_servings: userPrefs.default_servings || 4,
           measurement_unit: userPrefs.measurement_unit || "metric",
         });
-      }
     } catch (error) {
       toast.error("Failed to load user data");
     } finally {
@@ -85,13 +73,10 @@ const Settings = () => {
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
     setSaving(true);
-
     try {
       await api.put("/users/profile", profile);
       toast.success("Profile updated successfully");
-
-      const updatedUser = { ...user, ...profile };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
+      localStorage.setItem("user", JSON.stringify({ ...user, ...profile }));
     } catch (error) {
       toast.error("Failed to update profile");
     } finally {
@@ -114,19 +99,15 @@ const Settings = () => {
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
-
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
-
     if (passwordData.newPassword.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;
     }
-
     setSaving(true);
-
     try {
       await api.put("/users/change-password", {
         currentPassword: passwordData.currentPassword,
@@ -150,10 +131,8 @@ const Settings = () => {
       !window.confirm(
         "Are you sure you want to delete your account? This action cannot be undone.",
       )
-    ) {
+    )
       return;
-    }
-
     const confirmation = window.prompt(
       'Type "DELETE" to confirm account deletion:',
     );
@@ -161,7 +140,6 @@ const Settings = () => {
       toast.error("Account deletion cancelled");
       return;
     }
-
     try {
       await api.delete("/users/account");
       toast.success("Account deleted successfully");
@@ -172,61 +150,59 @@ const Settings = () => {
     }
   };
 
-  const toggleDietary = (option) => {
+  const toggleDietary = (option) =>
     setPreferences((prev) => ({
       ...prev,
       dietary_restrictions: prev.dietary_restrictions.includes(option)
         ? prev.dietary_restrictions.filter((d) => d !== option)
         : [...prev.dietary_restrictions, option],
     }));
-  };
 
-  const toggleCuisine = (cuisine) => {
+  const toggleCuisine = (cuisine) =>
     setPreferences((prev) => ({
       ...prev,
       preferred_cuisines: prev.preferred_cuisines.includes(cuisine)
         ? prev.preferred_cuisines.filter((c) => c !== cuisine)
         : [...prev.preferred_cuisines, cuisine],
     }));
-  };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-900">
         <Navbar />
         <div className="flex items-center justify-center h-96">
-          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
+  const inputClass =
+    "w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm transition-all";
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-          <p className="text-gray-600 mt-1">
+  return (
+    <div className="min-h-screen bg-gray-900">
+      <Navbar />
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
+            Settings
+          </h1>
+          <p className="text-gray-400 mt-1 text-sm">
             Manage your account and preferences
           </p>
         </div>
 
-        <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-                <User className="w-5 h-5 text-emerald-600" />
-              </div>
-              <h2 className="text-xl font-semibold text-gray-900">
-                Profile Information
-              </h2>
-            </div>
-
+        <div className="space-y-4">
+          {/* Profile */}
+          <Section
+            icon={<User className="w-4 h-4 text-emerald-400" />}
+            iconBg="bg-emerald-500/20"
+            title="Profile Information"
+          >
             <form onSubmit={handleProfileUpdate} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-xs font-medium text-gray-400 mb-1.5">
                   Name
                 </label>
                 <input
@@ -235,124 +211,79 @@ const Settings = () => {
                   onChange={(e) =>
                     setProfile({ ...profile, name: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+                  className={inputClass}
                   required
                 />
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-xs font-medium text-gray-400 mb-1.5">
                   Email
                 </label>
                 <input
                   type="email"
                   value={profile.email}
                   disabled
-                  onChange={(e) =>
-                    setProfile({ ...profile, email: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
-                  required
+                  className={`${inputClass} opacity-50 cursor-not-allowed`}
                 />
               </div>
-
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50"
+                className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors disabled:opacity-50 active:scale-[0.98]"
               >
                 <Save className="w-4 h-4" />
                 {saving ? "Saving..." : "Save Profile"}
               </button>
             </form>
-          </div>
+          </Section>
 
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Lock className="w-5 h-5 text-blue-600" />
-              </div>
-              <h2 className="text-xl font-semibold text-gray-900">
-                Change Password
-              </h2>
-            </div>
-
+          {/* Password */}
+          <Section
+            icon={<Lock className="w-4 h-4 text-blue-400" />}
+            iconBg="bg-blue-500/20"
+            title="Change Password"
+          >
             <form onSubmit={handlePasswordChange} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Current Password
-                </label>
-                <input
-                  type="password"
-                  value={passwordData.currentPassword}
-                  onChange={(e) =>
-                    setPasswordData({
-                      ...passwordData,
-                      currentPassword: e.target.value,
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  New Password
-                </label>
-                <input
-                  type="password"
-                  value={passwordData.newPassword}
-                  onChange={(e) =>
-                    setPasswordData({
-                      ...passwordData,
-                      newPassword: e.target.value,
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
-                  required
-                  minLength={6}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Confirm New Password
-                </label>
-                <input
-                  type="password"
-                  value={passwordData.confirmPassword}
-                  onChange={(e) =>
-                    setPasswordData({
-                      ...passwordData,
-                      confirmPassword: e.target.value,
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
-                  required
-                  minLength={6}
-                />
-              </div>
-
+              {[
+                { label: "Current Password", key: "currentPassword" },
+                { label: "New Password", key: "newPassword" },
+                { label: "Confirm New Password", key: "confirmPassword" },
+              ].map(({ label, key }) => (
+                <div key={key}>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">
+                    {label}
+                  </label>
+                  <input
+                    type="password"
+                    value={passwordData[key]}
+                    onChange={(e) =>
+                      setPasswordData({
+                        ...passwordData,
+                        [key]: e.target.value,
+                      })
+                    }
+                    className={inputClass}
+                    required
+                    minLength={key !== "currentPassword" ? 6 : undefined}
+                  />
+                </div>
+              ))}
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50"
+                className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors disabled:opacity-50 active:scale-[0.98]"
               >
                 <Lock className="w-4 h-4" />
                 {saving ? "Changing..." : "Change Password"}
               </button>
             </form>
-          </div>
+          </Section>
 
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
-              Dietary Preferences
-            </h2>
-
-            <form onSubmit={handlePreferencesUpdate} className="space-y-6">
+          {/* Dietary Preferences */}
+          <Section title="Dietary Preferences">
+            <form onSubmit={handlePreferencesUpdate} className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-xs font-medium text-gray-400 mb-2">
                   Dietary Restrictions
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -361,10 +292,10 @@ const Settings = () => {
                       key={option}
                       type="button"
                       onClick={() => toggleDietary(option)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                         preferences.dietary_restrictions.includes(option)
                           ? "bg-emerald-500 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          : "bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white"
                       }`}
                     >
                       {option}
@@ -374,7 +305,7 @@ const Settings = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-xs font-medium text-gray-400 mb-1.5">
                   Allergies (comma-separated)
                 </label>
                 <input
@@ -390,12 +321,12 @@ const Settings = () => {
                     })
                   }
                   placeholder="e.g., peanuts, shellfish, soy"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+                  className={inputClass}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-xs font-medium text-gray-400 mb-2">
                   Preferred Cuisines
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -404,10 +335,10 @@ const Settings = () => {
                       key={cuisine}
                       type="button"
                       onClick={() => toggleCuisine(cuisine)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                         preferences.preferred_cuisines.includes(cuisine)
                           ? "bg-emerald-500 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          : "bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white"
                       }`}
                     >
                       {cuisine}
@@ -417,7 +348,7 @@ const Settings = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-xs font-medium text-gray-400 mb-1.5">
                   Default Servings: {preferences.default_servings}
                 </label>
                 <input
@@ -431,86 +362,72 @@ const Settings = () => {
                       default_servings: parseInt(e.target.value),
                     })
                   }
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                  className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
                 />
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <div className="flex justify-between text-xs text-gray-600 mt-1">
                   <span>1</span>
                   <span>12</span>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-xs font-medium text-gray-400 mb-2">
                   Measurement Unit
                 </label>
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setPreferences({
-                        ...preferences,
-                        measurement_unit: "metric",
-                      })
-                    }
-                    className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
-                      preferences.measurement_unit === "metric"
-                        ? "bg-emerald-500 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                  >
-                    Metric (kg, L)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setPreferences({
-                        ...preferences,
-                        measurement_unit: "imperial",
-                      })
-                    }
-                    className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
-                      preferences.measurement_unit === "imperial"
-                        ? "bg-emerald-500 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                  >
-                    Imperial (lb, gal)
-                  </button>
+                <div className="flex gap-2">
+                  {[
+                    { value: "metric", label: "Metric (kg, L)" },
+                    { value: "imperial", label: "Imperial (lb, gal)" },
+                  ].map(({ value, label }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() =>
+                        setPreferences({
+                          ...preferences,
+                          measurement_unit: value,
+                        })
+                      }
+                      className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                        preferences.measurement_unit === value
+                          ? "bg-emerald-500 text-white"
+                          : "bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
                 </div>
               </div>
 
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50"
+                className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors disabled:opacity-50 active:scale-[0.98]"
               >
                 <Save className="w-4 h-4" />
                 {saving ? "Saving..." : "Save Preferences"}
               </button>
             </form>
-          </div>
+          </Section>
 
-          <div className="bg-white rounded-xl border border-red-200 p-6">
+          {/* Danger Zone */}
+          <div className="bg-gray-800 rounded-2xl border border-red-500/30 p-4 sm:p-5">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                <Trash2 className="w-5 h-5 text-red-600" />
+              <div className="w-8 h-8 bg-red-500/20 rounded-xl flex items-center justify-center">
+                <Trash2 className="w-4 h-4 text-red-400" />
               </div>
-              <h2 className="text-xl font-semibold text-gray-900">
-                Danger Zone
-              </h2>
+              <h2 className="font-semibold text-white text-sm">Danger Zone</h2>
             </div>
-
-            <p className="text-gray-600 mb-4">
-              Once you delete your account, there is no going back. All your
-              recipes, meal plans, and data will be permanently deleted.
+            <p className="text-gray-500 text-sm mb-4">
+              Deleting your account permanently removes all your recipes, meal
+              plans, and data.
             </p>
-
             <button
               onClick={handleDeleteAccount}
-              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors active:scale-[0.98]"
             >
-              <Trash2 className="w-4 h-4" />
-              Delete Account
+              <Trash2 className="w-4 h-4" /> Delete Account
             </button>
           </div>
         </div>
@@ -518,5 +435,21 @@ const Settings = () => {
     </div>
   );
 };
+
+const Section = ({ icon, iconBg, title, children }) => (
+  <div className="bg-gray-800 rounded-2xl border border-gray-700 p-4 sm:p-5">
+    <div className="flex items-center gap-3 mb-5">
+      {icon && (
+        <div
+          className={`w-8 h-8 ${iconBg} rounded-xl flex items-center justify-center shrink-0`}
+        >
+          {icon}
+        </div>
+      )}
+      <h2 className="font-semibold text-white text-sm">{title}</h2>
+    </div>
+    {children}
+  </div>
+);
 
 export default Settings;

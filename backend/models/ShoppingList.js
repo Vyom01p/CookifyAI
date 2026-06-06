@@ -4,7 +4,7 @@ class ShoppingList {
    * Generate shopping list from meal plan
    */
   static async generateFromMealPlan(userId, startDate, endDate) {
-    const client = await db.pool.connect();
+    const client = await db.connect();
 
     try {
       await client.query("BEGIN");
@@ -190,7 +190,7 @@ class ShoppingList {
    * Add checked items to pantry
    */
   static async addCheckedToPantry(userId) {
-    const client = await db.pool.connect();
+    const client = await db.connect();
 
     try {
       await client.query("BEGIN");

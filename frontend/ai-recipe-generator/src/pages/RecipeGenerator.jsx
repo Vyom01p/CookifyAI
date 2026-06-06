@@ -1,8 +1,18 @@
 import { useState, useEffect } from "react";
-import { ChefHat, Sparkles, Plus, X, Clock, Users } from "lucide-react";
+import {
+  ChefHat,
+  Sparkles,
+  Plus,
+  X,
+  Clock,
+  Users,
+  RefreshCw,
+  BookmarkPlus,
+} from "lucide-react";
 import Navbar from "../components/Navbar";
 import toast from "react-hot-toast";
 import api from "../services/api";
+
 const CUISINES = [
   "Any",
   "Italian",
@@ -40,35 +50,22 @@ const RecipeGenerator = () => {
   const [generating, setGenerating] = useState(false);
   const [generatedRecipe, setGeneratedRecipe] = useState(null);
   const [saving, setSaving] = useState(false);
-  const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
-  // Load user preferences on component mount
   useEffect(() => {
     const fetchUserPreferences = async () => {
       try {
         const response = await api.get("/users/profile");
         const preferences = response.data.data.preferences;
         if (preferences) {
-          if (
-            preferences.dietaryRestrictions &&
-            preferences.dietaryRestrictions.length > 0
-          ) {
+          if (preferences.dietaryRestrictions?.length > 0)
             setDietaryRestrictions(preferences.dietaryRestrictions);
-          }
-          if (
-            preferences.preferred_cuisines &&
-            preferences.preferred_cuisines.length > 0
-          ) {
+          if (preferences.preferred_cuisines?.length > 0)
             setCuisineType(preferences.preferred_cuisines[0]);
-          }
-          if (preferences.default_servings) {
+          if (preferences.default_servings)
             setServings(preferences.default_servings);
-          }
-          setPreferencesLoaded(true);
         }
       } catch (error) {
         console.error("Failed load user preferences:", error);
-        setPreferencesLoaded(true);
       }
     };
     fetchUserPreferences();
@@ -81,16 +78,15 @@ const RecipeGenerator = () => {
     }
   };
 
-  const removeIngredient = (ingredient) => {
+  const removeIngredient = (ingredient) =>
     setIngredients(ingredients.filter((i) => i !== ingredient));
-  };
 
   const toggleDietary = (option) => {
-    if (dietaryRestrictions.includes(option)) {
-      setDietaryRestrictions(dietaryRestrictions.filter((d) => d !== option));
-    } else {
-      setDietaryRestrictions([...dietaryRestrictions, option]);
-    }
+    setDietaryRestrictions(
+      dietaryRestrictions.includes(option)
+        ? dietaryRestrictions.filter((d) => d !== option)
+        : [...dietaryRestrictions, option],
+    );
   };
 
   const handleGenerate = async () => {
@@ -98,7 +94,6 @@ const RecipeGenerator = () => {
       toast.error("Please add at least one ingredient or use pantry items");
       return;
     }
-
     setGenerating(true);
     setGeneratedRecipe(null);
     try {
@@ -136,7 +131,6 @@ const RecipeGenerator = () => {
         ingredients: generatedRecipe.ingredients,
         nutrition: generatedRecipe.nutrition,
       });
-
       toast.success("Recipe saved to your collection!");
     } catch (error) {
       toast.error("Failed to save recipe");
@@ -145,81 +139,79 @@ const RecipeGenerator = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
+  const inputClass =
+    "w-full px-3 py-2.5 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm transition-all";
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-* from-emerald-500 to-emerald-600 rounded-2xl mb-4">
-            <Sparkles className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            AI Recipe Generator
+  return (
+    <div className="min-h-screen bg-gray-900">
+      <Navbar />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
+            Generate Recipe
           </h1>
-          <p className="text-gray-600 mt-2">
-            Let AI create delicious recipes based on your ingredients
+          <p className="text-gray-400 mt-1 text-sm">
+            Let AI craft a recipe from your ingredients
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Input Section */}
-          <div className="space-y-6">
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Ingredients
-              </h2>
-
-              {/* Use Pantry Toggle */}
-              <div className="flex items-center gap-3 mb-4 p-3 bg-emerald-50 rounded-lg">
-                <input
-                  type="checkbox"
-                  id="use-pantry"
-                  checked={usePantry}
-                  onChange={(e) => setUsePantry(e.target.checked)}
-                  className="w-4 h-4 text-emerald-500 border-gray-300 rounded focus:ring-emerald-500"
-                />
-                <label
-                  htmlFor="use-pantry"
-                  className="text-sm font-medium text-emerald-900"
-                >
-                  Use ingredients from my pantry
-                </label>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          {/* Left */}
+          <div className="space-y-4">
+            {/* Ingredients */}
+            <div className="bg-gray-800 rounded-2xl border border-gray-700 p-4 sm:p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <ChefHat className="w-4 h-4 text-emerald-400" />
+                <h2 className="font-semibold text-white text-sm">
+                  Ingredients
+                </h2>
               </div>
 
-              {/* Manual Ingredient Input */}
-              <div className="flex gap-2 mb-4">
+              {/* Pantry toggle */}
+              <label className="flex items-center justify-between gap-3 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl cursor-pointer mb-4">
+                <span className="text-sm font-medium text-emerald-300">
+                  Use ingredients from my pantry
+                </span>
+                <div
+                  onClick={() => setUsePantry(!usePantry)}
+                  className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${usePantry ? "bg-emerald-500" : "bg-gray-600"}`}
+                >
+                  <div
+                    className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${usePantry ? "left-6" : "left-1"}`}
+                  />
+                </div>
+              </label>
+
+              <div className="flex gap-2 mb-3">
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && addIngredient()}
-                  placeholder="Add ingredient (e.g., tomatoes)"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+                  placeholder="Add ingredient..."
+                  className={`flex-1 ${inputClass}`}
                 />
                 <button
                   onClick={addIngredient}
-                  className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors"
+                  className="w-10 h-10 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl flex items-center justify-center transition-colors shrink-0"
                 >
                   <Plus className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Ingredient Tags */}
               {ingredients.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {ingredients.map((ingredient, index) => (
                     <span
                       key={index}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full text-xs font-medium"
                     >
                       {ingredient}
                       <button
                         onClick={() => removeIngredient(ingredient)}
-                        className="hover:text-red-600 transition-colors"
+                        className="hover:text-red-400 transition-colors ml-0.5"
                       >
-                        <X className="w-4 h-4" />
+                        <X className="w-3 h-3" />
                       </button>
                     </span>
                   ))}
@@ -228,43 +220,44 @@ const RecipeGenerator = () => {
             </div>
 
             {/* Preferences */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
-              <h2 className="text-lg font-semibold text-gray-900">
-                Preferences
-              </h2>
+            <div className="bg-gray-800 rounded-2xl border border-gray-700 p-4 sm:p-5 space-y-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-emerald-400" />
+                <h2 className="font-semibold text-white text-sm">
+                  Preferences
+                </h2>
+              </div>
 
-              {/* Cuisine Type */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Cuisine Type
+                <label className="block text-xs font-medium text-gray-400 mb-1.5">
+                  Cuisine type
                 </label>
                 <select
                   value={cuisineType}
                   onChange={(e) => setCuisineType(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+                  className={inputClass}
                 >
-                  {CUISINES.map((cuisine) => (
-                    <option key={cuisine} value={cuisine}>
-                      {cuisine}
+                  {CUISINES.map((c) => (
+                    <option key={c} value={c}>
+                      {c === "Any" ? "Any cuisine" : c}
                     </option>
                   ))}
                 </select>
               </div>
 
-              {/* Dietary Restrictions */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Dietary Restrictions
+                <label className="block text-xs font-medium text-gray-400 mb-2">
+                  Dietary restrictions
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {DIETARY_OPTIONS.map((option) => (
                     <button
                       key={option}
                       onClick={() => toggleDietary(option)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                         dietaryRestrictions.includes(option)
                           ? "bg-emerald-500 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          : "bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white"
                       }`}
                     >
                       {option}
@@ -273,9 +266,8 @@ const RecipeGenerator = () => {
                 </div>
               </div>
 
-              {/* Servings */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-xs font-medium text-gray-400 mb-1.5">
                   Servings: {servings}
                 </label>
                 <input
@@ -284,28 +276,27 @@ const RecipeGenerator = () => {
                   max="12"
                   value={servings}
                   onChange={(e) => setServings(parseInt(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                  className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-emerald-500"
                 />
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <div className="flex justify-between text-xs text-gray-600 mt-1">
                   <span>1</span>
                   <span>12</span>
                 </div>
               </div>
 
-              {/* Cooking Time */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Cooking Time
+                <label className="block text-xs font-medium text-gray-400 mb-2">
+                  Cooking time
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {COOKING_TIMES.map((time) => (
                     <button
                       key={time.value}
                       onClick={() => setCookingTime(time.value)}
-                      className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      className={`py-2 rounded-xl text-xs font-medium transition-colors ${
                         cookingTime === time.value
                           ? "bg-emerald-500 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          : "bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white"
                       }`}
                     >
                       {time.label}
@@ -315,178 +306,177 @@ const RecipeGenerator = () => {
               </div>
             </div>
 
-            {/* Generate Button */}
             <button
               onClick={handleGenerate}
               disabled={generating}
-              className="w-full bg-linear-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 border border-gray-600 active:scale-[0.98] text-white font-semibold py-3.5 rounded-2xl transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
               {generating ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Generating Recipe...
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />{" "}
+                  Generating...
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-5 h-5" />
-                  Generate Recipe
+                  <Sparkles className="w-4 h-4 text-emerald-400" /> Generate
+                  recipe
                 </>
               )}
             </button>
           </div>
 
-          {/* Results Section */}
+          {/* Right */}
           <div>
             {generatedRecipe ? (
-              <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-6">
-                {/* Recipe Header */}
+              <div className="bg-gray-800 rounded-2xl border border-gray-700 p-4 sm:p-5 space-y-5">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  <h2 className="text-xl font-bold text-white leading-snug">
                     {generatedRecipe.name}
                   </h2>
-                  <p className="text-gray-600">{generatedRecipe.description}</p>
+                  <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-gray-400">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {generatedRecipe.prepTime + generatedRecipe.cookTime} mins
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Users className="w-3 h-3" />
+                      {generatedRecipe.servings} servings
+                    </span>
+                    {generatedRecipe.difficulty && (
+                      <span className="capitalize px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-full font-medium">
+                        {generatedRecipe.difficulty}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-400 mt-2 leading-relaxed">
+                    {generatedRecipe.description}
+                  </p>
+                </div>
 
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
+                <div className="flex flex-wrap gap-1.5">
+                  {generatedRecipe.cuisineType && (
+                    <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 rounded-full text-xs font-medium">
                       {generatedRecipe.cuisineType}
                     </span>
-                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium capitalize">
-                      {generatedRecipe.difficulty}
+                  )}
+                  {generatedRecipe.dietaryTags?.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2.5 py-1 bg-purple-500/20 text-purple-400 border border-purple-500/20 rounded-full text-xs font-medium"
+                    >
+                      {tag}
                     </span>
-                    {generatedRecipe.dietaryTags?.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center gap-6 mt-4 text-sm text-gray-600">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      <span>
-                        {generatedRecipe.prepTime + generatedRecipe.cookTime}{" "}
-                        mins
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4" />
-                      <span>{generatedRecipe.servings} servings</span>
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
-                {/* Ingredients */}
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-3">
-                    Ingredients
-                  </h3>
-                  <ul className="space-y-2">
-                    {generatedRecipe.ingredients?.map((ing, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center gap-2 text-gray-700"
-                      >
-                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
-                        {ing.quantity} {ing.unit} {ing.name}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Instructions */}
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-3">
+                  <h3 className="font-semibold text-white text-sm mb-3">
                     Instructions
                   </h3>
                   <ol className="space-y-3">
                     {generatedRecipe.instructions?.map((step, index) => (
                       <li key={index} className="flex gap-3">
-                        <span className="shrink-0 w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center text-sm font-medium">
+                        <span className="shrink-0 w-6 h-6 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xs font-semibold">
                           {index + 1}
                         </span>
-                        <span className="text-gray-700 pt-0.5">{step}</span>
+                        <span className="text-sm text-gray-400 pt-0.5 leading-relaxed">
+                          {step}
+                        </span>
                       </li>
                     ))}
                   </ol>
                 </div>
 
-                {/* Nutrition */}
                 {generatedRecipe.nutrition && (
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-3">
+                    <h3 className="font-semibold text-white text-sm mb-3">
                       Nutrition (per serving)
                     </h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-                      <NutritionBadge
-                        label="Calories"
-                        value={generatedRecipe.nutrition.calories}
-                        unit="kcal"
-                      />
-                      <NutritionBadge
-                        label="Protein"
-                        value={generatedRecipe.nutrition.protein}
-                        unit="g"
-                      />
-                      <NutritionBadge
-                        label="Carbs"
-                        value={generatedRecipe.nutrition.carbs}
-                        unit="g"
-                      />
-                      <NutritionBadge
-                        label="Fats"
-                        value={generatedRecipe.nutrition.fats}
-                        unit="g"
-                      />
-                      <NutritionBadge
-                        label="Fiber"
-                        value={generatedRecipe.nutrition.fiber}
-                        unit="g"
-                      />
+                    <div className="grid grid-cols-5 gap-2">
+                      {[
+                        {
+                          label: "Cal",
+                          value: generatedRecipe.nutrition.calories,
+                          unit: "",
+                        },
+                        {
+                          label: "Protein",
+                          value: generatedRecipe.nutrition.protein,
+                          unit: "g",
+                        },
+                        {
+                          label: "Carbs",
+                          value: generatedRecipe.nutrition.carbs,
+                          unit: "g",
+                        },
+                        {
+                          label: "Fats",
+                          value: generatedRecipe.nutrition.fats,
+                          unit: "g",
+                        },
+                        {
+                          label: "Fiber",
+                          value: generatedRecipe.nutrition.fiber,
+                          unit: "g",
+                        },
+                      ].map(({ label, value, unit }) => (
+                        <div
+                          key={label}
+                          className="text-center p-2 bg-gray-700 rounded-xl"
+                        >
+                          <div className="text-sm font-bold text-white">
+                            {value}
+                            {unit}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            {label}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
 
-                {/* Cooking Tips */}
-                {generatedRecipe.cookingTips &&
-                  generatedRecipe.cookingTips.length > 0 && (
-                    <div className="bg-emerald-50 rounded-lg p-4">
-                      <h3 className="font-semibold text-emerald-900 mb-2">
-                        💡 Cooking Tips
-                      </h3>
-                      <ul className="space-y-1">
-                        {generatedRecipe.cookingTips.map((tip, index) => (
-                          <li key={index} className="text-sm text-emerald-800">
-                            • {tip}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                {generatedRecipe.cookingTips?.length > 0 && (
+                  <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3">
+                    <p className="text-xs font-semibold text-emerald-400 mb-1.5">
+                      💡 Cooking Tips
+                    </p>
+                    <ul className="space-y-1">
+                      {generatedRecipe.cookingTips.map((tip, index) => (
+                        <li key={index} className="text-xs text-emerald-300/80">
+                          • {tip}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
-                {/* Actions */}
-                <div className="flex gap-3 pt-4 border-t border-gray-200">
+                <div className="flex gap-3 pt-2 border-t border-gray-700">
                   <button
                     onClick={handleSaveRecipe}
                     disabled={saving}
-                    className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 rounded-lg transition-colors disabled:opacity-50"
+                    className="flex-1 flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-600 border border-gray-600 text-white font-medium py-2.5 rounded-xl transition-colors disabled:opacity-50 text-sm active:scale-[0.98]"
                   >
-                    {saving ? "Saving..." : "Save Recipe"}
+                    <BookmarkPlus className="w-4 h-4" />
+                    {saving ? "Saving..." : "Save recipe"}
                   </button>
                   <button
-                    onClick={() => setGeneratedRecipe(null)}
-                    className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
+                    onClick={handleGenerate}
+                    disabled={generating}
+                    className="flex-1 flex items-center justify-center gap-2 border border-gray-600 text-gray-300 rounded-xl py-2.5 hover:bg-gray-700 font-medium transition-colors text-sm disabled:opacity-50"
                   >
-                    New Recipe
+                    <RefreshCw className="w-4 h-4" />
+                    Regenerate
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="bg-white rounded-xl border border-gray-200 p-12 text-center h-full flex flex-col items-center justify-center">
-                <ChefHat className="w-16 h-16 text-gray-300 mb-4" />
-                <p className="text-gray-500">
+              <div className="bg-gray-800 rounded-2xl border border-gray-700 h-full min-h-[300px] flex flex-col items-center justify-center p-12 text-center">
+                <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mb-4">
+                  <ChefHat className="w-8 h-8 text-gray-600" />
+                </div>
+                <p className="text-gray-500 text-sm">
                   Your generated recipe will appear here
                 </p>
               </div>
@@ -497,15 +487,5 @@ const RecipeGenerator = () => {
     </div>
   );
 };
-
-const NutritionBadge = ({ label, value, unit }) => (
-  <div className="text-center p-3 bg-gray-50 rounded-lg">
-    <div className="text-lg font-bold text-gray-900">
-      {value}
-      {unit}
-    </div>
-    <div className="text-xs text-gray-600">{label}</div>
-  </div>
-);
 
 export default RecipeGenerator;

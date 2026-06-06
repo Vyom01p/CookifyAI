@@ -9,7 +9,7 @@ router.get("/", shoppingListController.getShoppingList);
 router.post("/generate", shoppingListController.generateFromMealPlan);
 router.post("/", shoppingListController.addItem);
 router.put("/:id", shoppingListController.updateItem);
-router.put("/:id/toglle", shoppingListController.toggleChecked);
+router.put("/:id/toggle", shoppingListController.toggleChecked);
 router.delete("/:id", shoppingListController.deleteItem);
 router.delete("/clear/checked", shoppingListController.clearChecked);
 router.delete("/clear/all", shoppingListController.clearAll);
