@@ -181,6 +181,7 @@ npm run dev
 
 ## 📁 Project Structure
 
+```
 CookifyAI/
 │
 ├── frontend/
@@ -217,6 +218,7 @@ CookifyAI/
 │
 ├── .gitignore
 └── README.md
+```
 
 ---
 
