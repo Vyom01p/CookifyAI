@@ -1,156 +1,287 @@
-🧑‍🍳 CookifyAI
-A full-stack, AI-powered culinary companion that transforms your available pantry ingredients into delicious recipes. Built with modern web technologies to deliver a seamless, intelligent cooking and meal-planning experience.
+# 🍳 CookifyAI
 
-Live Demo: https://cookifyai.vercel.app
-Backend API: https://cookifyai.onrender.com
+A full-stack AI-powered recipe generation and meal planning platform. Built to make cooking smarter, easier, and more personalized.
 
-📋 Overview
-CookifyAI is a comprehensive recipe generation and kitchen management web application. Instead of wondering what to make for dinner, users can input their current pantry items, and the application leverages the Google Gemini AI API to generate customized recipes.
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google%20Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white)
 
-Featuring a robust backend architecture and a highly responsive React/Vite frontend, CookifyAI provides everything needed to manage ingredients, plan meals, and generate shopping lists. The platform ensures secure authentication, seamless database integration via Neon PostgreSQL, and a smooth user experience.
+---
 
-✨ Features
-👤 User Features
-Account Management: User registration and login with secure JWT authentication.
+## 📋 Overview
 
-Pantry Tracking: Add, edit, and manage ingredients currently available in your kitchen.
+CookifyAI is a comprehensive AI-powered recipe and meal planning web application. It lets users generate personalized recipes using Google Gemini AI based on ingredients they already have, manage their pantry, plan weekly meals, and auto-generate shopping lists — all in one place.
 
-AI Recipe Generation: Generate unique, actionable recipes based strictly on your available pantry items using Google's Gemini AI.
+Built with a clean REST API backend and a fully responsive React frontend, CookifyAI delivers a modern, seamless cooking companion experience.
 
-Meal Planning: Organize and save generated recipes into structured meal plans for the week.
+---
 
-Smart Shopping Lists: Automatically generate shopping lists for missing ingredients needed for upcoming meal plans.
+## ✨ Features
 
-Responsive Design: Optimized for both mobile and desktop screens for a seamless kitchen-side experience.
+### 👤 User Features
 
-🛠️ Tech Stack
-Frontend
-React.js (Vite) - Lightning-fast frontend build tool and library.
+**Account Management**
 
-Tailwind CSS - Utility-first CSS framework for rapid, responsive UI styling.
+- User registration and login with JWT authentication
+- Password reset functionality
+- Profile management via Settings page
+- Secure encrypted passwords
 
-Axios - Promise-based HTTP client for API requests.
+**AI Recipe Generation**
 
-Backend
-Node.js - JavaScript runtime environment.
+- Generate recipes using Google Gemini AI
+- Use ingredients directly from your pantry or enter custom ones
+- Set dietary preferences — Vegetarian, Vegan, Gluten-Free, Dairy-Free, Keto, Paleo
+- Choose cuisine type and number of servings
+- Save AI-generated recipes to your collection
 
-Express.js - Fast, unopinionated web framework.
+**Pantry Management**
 
-PostgreSQL (Neon) - Serverless cloud relational database.
+- Add and track ingredients with quantities and units
+- Set expiry dates and get expiry warnings
+- Filter ingredients by category — Vegetables, Fruits, Dairy, Meat, Spices, Grains
+- Search ingredients instantly
 
-pg-pool - PostgreSQL client for robust database connections.
+**Recipe Collection**
 
-AI & Security
-Google Gemini API - Advanced Large Language Model for intelligent recipe generation.
+- Browse and search your saved recipes
+- Filter by cuisine type and difficulty
+- View full recipe details — ingredients, steps, cook time, servings
 
-JWT (JSON Web Tokens) - Secure, stateless user authentication.
+**Meal Planner**
 
-Bcrypt - Password hashing and encryption.
+- Plan breakfast, lunch, and dinner for every day of the week
+- Navigate between weeks
+- Add recipes to any meal slot
+- Remove meals from the plan
 
-CORS - Secure cross-origin resource sharing configured for strict frontend-backend communication.
+**Shopping List**
 
-🚀 Getting Started
-Prerequisites
-Node.js (v18 or higher)
+- Auto-generate shopping lists from planned meals
+- Add custom items manually
+- Track what you've bought
 
-PostgreSQL Database (Local or Neon/Supabase cloud instance)
+**Dashboard**
 
-Google Gemini API Key
+- Overview of total recipes, pantry items, and meals planned this week
+- Quick access to Generate and Pantry
+- Recent recipes and upcoming meals at a glance
 
-Installation
-Clone the repository
+---
 
-Bash
+## 🛠️ Tech Stack
+
+### Frontend
+
+- **React** — Component-based UI
+- **React Router** — Client-side routing
+- **Tailwind CSS** — Utility-first styling
+- **Lucide React** — Icon library
+- **Axios** — HTTP client
+- **date-fns** — Date utilities
+- **React Hot Toast** — Notifications
+
+### Backend
+
+- **Node.js** — JavaScript runtime
+- **Express.js** — Web framework
+- **PostgreSQL** — Relational database
+- **JWT** — Secure authentication
+
+### AI
+
+- **Google Gemini API** — AI-powered recipe generation
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- PostgreSQL (local or cloud instance)
+- Google Gemini API key
+- npm or yarn
+
+### Installation
+
+**1. Clone the repository**
+
+```bash
 git clone https://github.com/Vyom01p/CookifyAI.git
 cd CookifyAI
-Install Backend Dependencies
+```
 
-Bash
+**2. Install backend dependencies**
+
+```bash
 cd backend
 npm install
-Install Frontend Dependencies
+```
 
-Bash
+**3. Install frontend dependencies**
+
+```bash
 cd ../frontend
 npm install
-Environment Configuration
-Backend (backend/.env):
+```
 
-Code snippet
+**4. Environment Configuration**
 
-# Server Configuration
+Create a `.env` file in the `backend` directory:
 
+```env
+# Server
+PORT=5000
 NODE_ENV=development
-PORT=8000
 
-# Database (Neon PostgreSQL)
+# Database
+DATABASE_URL=postgresql://<username>:<password>@localhost:5432/cookifyai
 
-DATABASE_URL=postgresql://<username>:<password>@<endpoint>.neon.tech/neondb?sslmode=require
-
-# JWT Configuration
-
+# JWT
 JWT_SECRET=your-super-secret-jwt-key
-JWT_EXPIRES_IN=30d
+JWT_EXPIRES_IN=90d
 
-# AI Configuration
+# Google Gemini
+GEMINI_API_KEY=your-gemini-api-key
+```
 
-GEMINI_API_KEY=your_google_gemini_api_key
-Frontend (frontend/.env):
+Create a `.env` file in the `frontend` directory:
 
-Code snippet
-VITE_API_URL=http://localhost:8000/api
-Start the Application
-Start the Backend Server:
+```env
+VITE_API_URL=http://localhost:5000/api/v1
+```
 
-Bash
+**5. Set up the database**
+
+```bash
 cd backend
-npm start
-Start the Frontend Development Server:
+npm run db:migrate
+```
 
-Bash
+**6. Start the application**
+
+Backend:
+
+```bash
+cd backend
+npm run dev
+```
+
+Frontend:
+
+```bash
 cd frontend
 npm run dev
-Access the application at: http://localhost:5173
+```
 
-🔌 API Endpoints
-Authentication
-POST /api/auth/register - Create a new user account
+---
 
-POST /api/auth/login - User login
+## 📁 Project Structure
 
-Users
-GET /api/users/profile - Get current user profile
+CookifyAI/
+│
+├── frontend/
+│ ├── src/
+│ │ ├── components/ # Shared components (Navbar, etc.)
+│ │ ├── pages/ # Page components
+│ │ │ ├── Dashboard.jsx
+│ │ │ ├── Generate.jsx
+│ │ │ ├── Recipes.jsx
+│ │ │ ├── Pantry.jsx
+│ │ │ ├── MealPlanner.jsx
+│ │ │ ├── Shopping.jsx
+│ │ │ ├── Settings.jsx
+│ │ │ └── Login.jsx
+│ │ ├── context/ # Auth context
+│ │ ├── services/ # API service layer
+│ │ └── main.jsx
+│ ├── public/
+│ └── package.json
+│
+├── backend/
+│ ├── controllers/ # Route controllers
+│ │ ├── authController.js
+│ │ ├── recipeController.js
+│ │ ├── pantryController.js
+│ │ ├── mealPlanController.js
+│ │ └── shoppingController.js
+│ ├── routes/ # API routes
+│ ├── models/ # Database models
+│ ├── middleware/ # Auth & error middleware
+│ ├── utils/ # Utility functions
+│ ├── app.js
+│ └── server.js
+│
+├── .gitignore
+└── README.md
 
-PUT /api/users/profile - Update user details
+---
 
-Pantry
-GET /api/pantry - Get all pantry items for the user
+## 🔌 API Endpoints
 
-POST /api/pantry - Add a new item to the pantry
+### Authentication
 
-DELETE /api/pantry/:id - Remove an item
+POST /api/v1/users/signup # Register new user
+POST /api/v1/users/login # Login
+GET /api/v1/users/logout # Logout
+PATCH /api/v1/users/updateMe # Update profile
 
-Recipes
-GET /api/recipes - Get user's saved recipes
+### Recipes
 
-POST /api/recipes/generate - (AI) Generate a new recipe based on pantry
+GET /api/v1/recipes # Get all recipes
+GET /api/v1/recipes/:id # Get single recipe
+POST /api/v1/recipes/generate # Generate recipe with Gemini AI
+DELETE /api/v1/recipes/:id # Delete recipe
+GET /api/v1/recipes/stats # Recipe stats
+GET /api/v1/recipes/recent # Recent recipes
 
-POST /api/recipes/save - Save a generated recipe
+### Pantry
 
-Meal Plans & Shopping List
-GET /api/meal-plans - Retrieve weekly meal plans
+GET /api/v1/pantry # Get all pantry items
+POST /api/v1/pantry # Add pantry item
+PATCH /api/v1/pantry/:id # Update pantry item
+DELETE /api/v1/pantry/:id # Delete pantry item
+GET /api/v1/pantry/stats # Pantry stats
 
-POST /api/meal-plans - Create a new meal plan
+### Meal Plans
 
-GET /api/shopping-list - View current shopping list
+GET /api/v1/meal-plans/weekly # Get weekly meal plan
+POST /api/v1/meal-plans # Add meal to plan
+DELETE /api/v1/meal-plans/:id # Remove meal from plan
+GET /api/v1/meal-plans/stats # Meal plan stats
+GET /api/v1/meal-plans/upcoming # Upcoming meals
 
-POST /api/shopping-list - Add missing ingredients to list
+### Shopping
 
-🚀 Deployment
-The application is fully configured for cloud deployment:
+GET /api/v1/shopping # Get shopping list
+POST /api/v1/shopping # Add item
+PATCH /api/v1/shopping/:id # Update item
+DELETE /api/v1/shopping/:id # Delete item
 
-Frontend: Deployed on Vercel with routing configured via vercel.json for seamless SPA navigation.
+---
 
-Backend: Deployed on Render utilizing automated continuous integration from the main branch.
+## 🔒 Security Features
 
-Database: Hosted securely on Neon, integrated via internal connection strings.
+- **JWT Authentication** — Secure token-based sessions
+- **Password Encryption** — Bcrypt hashing
+- **Protected Routes** — Auth middleware on all private endpoints
+- **Environment Variables** — Sensitive keys kept out of source code
+- **Input Validation** — Server-side request validation
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 🙏 Acknowledgments
+
+- [Google Gemini](https://deepmind.google/technologies/gemini/) for the AI recipe generation API
+- [Tailwind CSS](https://tailwindcss.com/) for the utility-first styling system
+- [Lucide](https://lucide.dev/) for the clean icon set
+- The open-source community for the amazing tools that made this possible
