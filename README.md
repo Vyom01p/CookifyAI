@@ -226,42 +226,52 @@ CookifyAI/
 
 ### Authentication
 
+```
 POST /api/v1/users/signup # Register new user
 POST /api/v1/users/login # Login
 GET /api/v1/users/logout # Logout
 PATCH /api/v1/users/updateMe # Update profile
+```
 
 ### Recipes
 
+```
 GET /api/v1/recipes # Get all recipes
 GET /api/v1/recipes/:id # Get single recipe
 POST /api/v1/recipes/generate # Generate recipe with Gemini AI
 DELETE /api/v1/recipes/:id # Delete recipe
 GET /api/v1/recipes/stats # Recipe stats
 GET /api/v1/recipes/recent # Recent recipes
+```
 
 ### Pantry
 
+```
 GET /api/v1/pantry # Get all pantry items
 POST /api/v1/pantry # Add pantry item
 PATCH /api/v1/pantry/:id # Update pantry item
 DELETE /api/v1/pantry/:id # Delete pantry item
 GET /api/v1/pantry/stats # Pantry stats
+```
 
 ### Meal Plans
 
+```
 GET /api/v1/meal-plans/weekly # Get weekly meal plan
 POST /api/v1/meal-plans # Add meal to plan
 DELETE /api/v1/meal-plans/:id # Remove meal from plan
 GET /api/v1/meal-plans/stats # Meal plan stats
 GET /api/v1/meal-plans/upcoming # Upcoming meals
+```
 
 ### Shopping
 
+```
 GET /api/v1/shopping # Get shopping list
 POST /api/v1/shopping # Add item
 PATCH /api/v1/shopping/:id # Update item
 DELETE /api/v1/shopping/:id # Delete item
+```
 
 ---
 
