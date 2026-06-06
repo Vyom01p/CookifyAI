@@ -1,5 +1,4 @@
 import PantryItem from "../models/pantryItems.js";
-// import PantryItems from "../models/PantryItems.js";
 //Get all pantry items
 
 export const getPantryItems = async (req, res, next) => {
