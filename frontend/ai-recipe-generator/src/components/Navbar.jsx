@@ -94,7 +94,7 @@ const Navbar = () => {
                 className="flex items-center gap-2 text-base sm:text-lg font-semibold text-white"
               >
                 <ChefHat className="w-6 h-6 text-emerald-500" />
-                <span className="hidden sm:inline">AI Recipe Generator</span>
+                <span className="hidden sm:inline">CookifyAI</span>
                 <span className="sm:hidden">AI Recipe</span>
               </Link>
             </div>

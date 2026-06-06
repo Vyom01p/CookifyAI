@@ -1,4 +1,4 @@
-import PantryItem from "../models/PantryItems.js";
+import PantryItem from "../models/pantryItems.js";
 // import PantryItems from "../models/PantryItems.js";
 //Get all pantry items
 
