@@ -13,8 +13,14 @@ import shoppingListRoutes from "./routes/shoppingList.js";
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// Middleware - UPDATED WITH YOUR VERCEL URL
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://cookifyai.vercel.app"],
+    credentials: true,
+  }),
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
